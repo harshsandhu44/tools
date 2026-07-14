@@ -3,6 +3,9 @@
 import { useState, useCallback } from 'react'
 import { json } from '@codemirror/lang-json'
 import { CodeEditor } from '@/components/code-editor'
+import { ToolHeader } from '@/components/tool-header'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 function formatDiff(seconds: number): string {
   const d = Math.floor(seconds / 86400)
@@ -95,10 +98,10 @@ export function JwtDecoderClient() {
 
   return (
     <div className="p-6">
-      <div className="mb-5">
-        <h1 className="text-2xl font-bold tracking-tight">JWT Decoder</h1>
-        <p className="text-muted-foreground text-sm mt-1">Paste a JWT to decode header and payload. Runs entirely in your browser.</p>
-      </div>
+      <ToolHeader
+        title="JWT Decoder"
+        description="Paste a JWT to decode header and payload. Runs entirely in your browser."
+      />
 
       <div className="flex flex-col lg:flex-row gap-4">
         {/* Input */}
@@ -127,17 +130,11 @@ export function JwtDecoderClient() {
                 Expiry
               </div>
               {expiry === 'none' ? (
-                <div className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-muted text-muted-foreground">
-                  No expiry claim
-                </div>
+                <Badge variant="muted">No expiry claim</Badge>
               ) : expiry.expired ? (
-                <div className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
-                  Expired {formatDiff(expiry.diff)} ago
-                </div>
+                <Badge variant="danger">Expired {formatDiff(expiry.diff)} ago</Badge>
               ) : (
-                <div className="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                  Expires in {formatDiff(expiry.diff)}
-                </div>
+                <Badge variant="success">Expires in {formatDiff(expiry.diff)}</Badge>
               )}
             </div>
           )}
@@ -146,13 +143,9 @@ export function JwtDecoderClient() {
           <div>
             <div className="mb-1.5 flex items-center justify-between">
               <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Header</span>
-              <button
-                onClick={copyHeader}
-                disabled={!headerJson}
-                className="text-xs px-2 py-1 rounded-md bg-secondary text-secondary-foreground hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
-              >
+              <Button variant="secondary" size="sm" onClick={copyHeader} disabled={!headerJson}>
                 {copiedHeader ? 'Copied!' : 'Copy'}
-              </button>
+              </Button>
             </div>
             <CodeEditor
               value={headerJson}
@@ -167,13 +160,9 @@ export function JwtDecoderClient() {
           <div>
             <div className="mb-1.5 flex items-center justify-between">
               <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Payload</span>
-              <button
-                onClick={copyPayload}
-                disabled={!payloadJson}
-                className="text-xs px-2 py-1 rounded-md bg-secondary text-secondary-foreground hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
-              >
+              <Button variant="secondary" size="sm" onClick={copyPayload} disabled={!payloadJson}>
                 {copiedPayload ? 'Copied!' : 'Copy'}
-              </button>
+              </Button>
             </div>
             <CodeEditor
               value={payloadJson}

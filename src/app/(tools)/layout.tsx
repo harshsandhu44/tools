@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { Sidebar } from '@/components/sidebar'
+import { Wordmark } from '@/components/wordmark'
+import { SiteFooter } from '@/components/site-footer'
 
 export default function ToolsLayout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -22,13 +23,12 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <Link href="/" className="font-bold text-foreground">
-            Tools
-          </Link>
+          <Wordmark />
         </header>
 
-        <main className="flex-1 overflow-auto">
-          {children}
+        <main className="flex-1 overflow-auto flex flex-col">
+          <div className="flex-1">{children}</div>
+          <SiteFooter />
         </main>
       </div>
     </div>

@@ -2,6 +2,9 @@
 
 import { useState, useCallback, useMemo } from 'react'
 import { CodeEditor } from '@/components/code-editor'
+import { ToolHeader } from '@/components/tool-header'
+import { Button } from '@/components/ui/button'
+import { SegmentedControl } from '@/components/ui/toggle-group'
 
 type Mode = 'encode' | 'decode'
 
@@ -42,41 +45,25 @@ export function Base64Client() {
 
   return (
     <div className="p-6">
-      <div className="mb-5">
-        <h1 className="text-2xl font-bold tracking-tight">Base64 Encoder/Decoder</h1>
-        <p className="text-muted-foreground text-sm mt-1">Encode text to Base64 or decode Base64 back to plain text.</p>
-      </div>
+      <ToolHeader
+        title="Base64 Encoder/Decoder"
+        description="Encode text to Base64 or decode Base64 back to plain text."
+      />
 
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
-        <div className="flex rounded-md border border-border overflow-hidden text-sm font-medium">
-          <button
-            onClick={() => setMode('encode')}
-            className={[
-              'px-3 py-1.5 transition-colors',
-              mode === 'encode' ? 'bg-primary text-primary-foreground' : 'bg-background text-foreground hover:bg-muted',
-            ].join(' ')}
-          >
-            Encode
-          </button>
-          <button
-            onClick={() => setMode('decode')}
-            className={[
-              'px-3 py-1.5 transition-colors',
-              mode === 'decode' ? 'bg-primary text-primary-foreground' : 'bg-background text-foreground hover:bg-muted',
-            ].join(' ')}
-          >
-            Decode
-          </button>
-        </div>
+        <SegmentedControl
+          value={mode}
+          onChange={setMode}
+          options={[
+            { value: 'encode', label: 'Encode' },
+            { value: 'decode', label: 'Decode' },
+          ]}
+        />
 
-        <button
-          onClick={copy}
-          disabled={!output}
-          className="px-3 py-1.5 text-sm font-medium bg-secondary text-secondary-foreground rounded-md hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed ml-auto"
-        >
+        <Button variant="secondary" size="sm" onClick={copy} disabled={!output} className="ml-auto">
           {copied ? 'Copied!' : 'Copy'}
-        </button>
+        </Button>
       </div>
 
       {/* Editors */}

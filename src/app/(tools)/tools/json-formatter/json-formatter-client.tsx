@@ -1,7 +1,11 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { JsonEditor } from '@/components/json-editor'
+import { json } from '@codemirror/lang-json'
+import { CodeEditor } from '@/components/code-editor'
+import { ToolHeader } from '@/components/tool-header'
+import { Button } from '@/components/ui/button'
+import { Select } from '@/components/ui/select'
 
 export function JsonFormatterClient() {
   const [input, setInput] = useState('')
@@ -60,10 +64,10 @@ export function JsonFormatterClient() {
 
   return (
     <div className="p-6">
-      <div className="mb-5">
-        <h1 className="text-2xl font-bold tracking-tight">JSON Formatter & Validator</h1>
-        <p className="text-muted-foreground text-sm mt-1">Format, validate, and minify JSON</p>
-      </div>
+      <ToolHeader
+        title="JSON Formatter & Validator"
+        description="Format, validate, and minify JSON"
+      />
 
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
@@ -71,50 +75,32 @@ export function JsonFormatterClient() {
           <label htmlFor="indent-select" className="text-sm text-muted-foreground">
             Indent
           </label>
-          <select
+          <Select
             id="indent-select"
             value={indent}
             onChange={e => setIndent(Number(e.target.value) as 2 | 4)}
-            className="text-sm border border-border rounded-md px-2 py-1.5 bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
           >
             <option value={2}>2 spaces</option>
             <option value={4}>4 spaces</option>
-          </select>
+          </Select>
         </div>
 
         <div className="flex items-center gap-2 ml-auto flex-wrap">
-          <button
-            onClick={format}
-            className="px-3 py-1.5 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:opacity-90 transition-opacity"
-          >
+          <Button size="sm" onClick={format}>
             Format
-          </button>
-          <button
-            onClick={minify}
-            className="px-3 py-1.5 text-sm font-medium bg-secondary text-secondary-foreground rounded-md hover:opacity-90 transition-opacity"
-          >
+          </Button>
+          <Button variant="secondary" size="sm" onClick={minify}>
             Minify
-          </button>
-          <button
-            onClick={copy}
-            disabled={!output}
-            className="px-3 py-1.5 text-sm font-medium bg-secondary text-secondary-foreground rounded-md hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
-          >
+          </Button>
+          <Button variant="secondary" size="sm" onClick={copy} disabled={!output}>
             {copied ? 'Copied!' : 'Copy'}
-          </button>
-          <button
-            onClick={download}
-            disabled={!output}
-            className="px-3 py-1.5 text-sm font-medium bg-secondary text-secondary-foreground rounded-md hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
-          >
+          </Button>
+          <Button variant="secondary" size="sm" onClick={download} disabled={!output}>
             Download
-          </button>
-          <button
-            onClick={clear}
-            className="px-3 py-1.5 text-sm font-medium bg-secondary text-secondary-foreground rounded-md hover:opacity-90 transition-opacity"
-          >
+          </Button>
+          <Button variant="secondary" size="sm" onClick={clear}>
             Clear
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -124,10 +110,11 @@ export function JsonFormatterClient() {
           <div className="mb-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
             Input
           </div>
-          <JsonEditor
+          <CodeEditor
             value={input}
             onChange={setInput}
             hasError={!!error}
+            extensions={[json()]}
             placeholder="Paste your JSON here..."
           />
           {error && (
@@ -139,9 +126,10 @@ export function JsonFormatterClient() {
           <div className="mb-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
             Output
           </div>
-          <JsonEditor
+          <CodeEditor
             value={output}
             readOnly
+            extensions={[json()]}
             placeholder="Formatted JSON will appear here..."
           />
         </div>

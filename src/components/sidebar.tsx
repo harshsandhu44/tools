@@ -3,8 +3,10 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useTheme } from 'next-themes'
 import { tools } from '@/lib/tools'
+import { Wordmark } from '@/components/wordmark'
+import { ThemeToggle } from '@/components/theme-toggle'
+import { Input } from '@/components/ui/input'
 
 interface SidebarProps {
   mobileOpen: boolean
@@ -15,7 +17,6 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false)
   const [search, setSearch] = useState('')
   const pathname = usePathname()
-  const { resolvedTheme, setTheme } = useTheme()
 
   const grouped = useMemo(() => {
     const filtered = search
@@ -55,16 +56,8 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
             collapsed ? 'justify-between lg:justify-center' : 'justify-between',
           ].join(' ')}
         >
-          <Link
-            href="/"
-            onClick={onMobileClose}
-            className={[
-              'font-bold text-sidebar-foreground hover:opacity-80 transition-opacity',
-              collapsed ? 'lg:hidden' : '',
-            ].join(' ')}
-          >
-            Tools
-          </Link>
+          <Wordmark className={collapsed ? 'lg:hidden' : ''} />
+
 
           {/* Desktop collapse/expand button */}
           <button
@@ -99,12 +92,11 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         <div className={['flex-1 flex flex-col min-h-0 overflow-hidden', collapsed ? 'lg:hidden' : ''].join(' ')}>
           {/* Search */}
           <div className="px-3 py-2 shrink-0">
-            <input
+            <Input
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search tools..."
-              className="w-full px-3 py-1.5 text-sm bg-background border border-sidebar-border rounded-md text-sidebar-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
             />
           </div>
 
@@ -143,31 +135,9 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           </nav>
 
           {/* Theme switcher */}
-          <div className="px-3 py-3 border-t border-sidebar-border shrink-0">
-            <div className="flex rounded-md border border-sidebar-border overflow-hidden text-xs font-medium">
-              <button
-                onClick={() => setTheme('light')}
-                className={[
-                  'flex-1 py-1.5 transition-colors',
-                  resolvedTheme === 'light'
-                    ? 'bg-sidebar-primary text-sidebar-primary-foreground'
-                    : 'text-sidebar-foreground hover:bg-sidebar-accent',
-                ].join(' ')}
-              >
-                Light
-              </button>
-              <button
-                onClick={() => setTheme('dark')}
-                className={[
-                  'flex-1 py-1.5 transition-colors',
-                  resolvedTheme === 'dark'
-                    ? 'bg-sidebar-primary text-sidebar-primary-foreground'
-                    : 'text-sidebar-foreground hover:bg-sidebar-accent',
-                ].join(' ')}
-              >
-                Dark
-              </button>
-            </div>
+          <div className="px-3 py-3 border-t border-sidebar-border shrink-0 flex items-center justify-between">
+            <span className="text-xs font-medium text-muted-foreground">Theme</span>
+            <ThemeToggle />
           </div>
         </div>
       </aside>
